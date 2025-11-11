@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { sanityClient } from "@/lib/sanity.client";
 import { plansByCategoryQuery, siteSettingsQuery } from "@/lib/sanity.queries";
 
@@ -8,10 +9,9 @@ async function getData() {
   const [residencial, empresarial, settings] = await Promise.all([
     sanityClient.fetch(plansByCategoryQuery, { category: "residencial" }),
     sanityClient.fetch(plansByCategoryQuery, { category: "empresarial" }),
-    sanityClient.fetch(siteSettingsQuery),
+    sanityClient.fetch(siteSettingsQuery).catch(() => null),
   ]);
 
-  // Prepara base de WhatsApp desde el CMS (siteSettings.whatsapp)
   const waDigits = (settings?.whatsapp || "").replace(/\D/g, "");
   const waBase = waDigits ? `https://wa.me/${waDigits}` : "";
 
@@ -33,35 +33,39 @@ export default async function Page() {
     items?.length ? (
       <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((p: any) => (
-          <li key={p._id} className="rounded-xl border border-white/10 p-6 bg-white/5">
+          <li
+            key={p._id}
+            className="rounded-2xl p-6 ring-1 ring-white/10 bg-white/[0.03]"
+          >
             <h3 className="text-xl font-semibold">{p.title}</h3>
             <p className="mt-1 text-sm text-zinc-400">
-              {typeof p.price === "number" ? `₡${p.price.toLocaleString("es-CR")}/mes` : "Precio a consultar"}
+              {typeof p.price === "number"
+                ? `₡${p.price.toLocaleString("es-CR")}/mes`
+                : "Precio a consultar"}
             </p>
-            <p className="mt-2 text-sm">{p.down}↓ / {p.up}↑ Mbps</p>
+            <p className="mt-2 text-sm">
+              {p.down}↓ / {p.up}↑ Mbps
+            </p>
 
             <ul className="mt-4 space-y-1 text-sm text-zinc-300">
-              {p.features?.map((f: string, i: number) => <li key={i}>• {f}</li>)}
+              {p.features?.map((f: string, i: number) => (
+                <li key={i}>• {f}</li>
+              ))}
             </ul>
 
-            {/* CTA: aquí va el botón dentro del <li> de cada plan */}
-            {waBase ? (
-              <a
-                href={waLink(p.title, p.price)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-5 inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2 text-sm hover:bg-white/10"
-              >
-                Contratar por WhatsApp
-              </a>
-            ) : (
-              <Link
-                href="/soporte"
-                className="mt-5 inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2 text-sm hover:bg-white/10"
-              >
-                Solicitar este plan
-              </Link>
-            )}
+            <div className="mt-5">
+              {waBase ? (
+                <Button asChild className="w-full">
+                  <a href={waLink(p.title, p.price)} target="_blank" rel="noreferrer">
+                    Contratar por WhatsApp
+                  </a>
+                </Button>
+              ) : (
+                <Button asChild variant="outline" className="w-full border-white/20">
+                  <Link href="/soporte">Solicitar este plan</Link>
+                </Button>
+              )}
+            </div>
           </li>
         ))}
       </ul>

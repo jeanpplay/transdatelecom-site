@@ -1,8 +1,24 @@
-import {createClient} from "next-sanity";
+import { createClient } from "next-sanity";
+
+const projectId =
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ??
+  process.env.SANITY_PROJECT_ID ??
+  "sthcs42v";
+
+const dataset =
+  process.env.NEXT_PUBLIC_SANITY_DATASET ??
+  process.env.SANITY_DATASET ??
+  "production";
+
+const apiVersion =
+  process.env.NEXT_PUBLIC_SANITY_API_VERSION ??
+  process.env.SANITY_API_VERSION ??
+  "2025-11-11";
 
 export const sanityClient = createClient({
-  projectId: process.env.SANITY_PROJECT_ID!,   // p.ej. "sthcs42v"
-  dataset: process.env.SANITY_DATASET!,        // "production"
-  apiVersion: process.env.SANITY_API_VERSION || "2025-11-11",
-  useCdn: true,                                // público/rápido
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: true,
+  perspective: "published",
 });
