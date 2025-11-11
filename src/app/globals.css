@@ -1,26 +1,159 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Tailwind v4 dark variant */
+@custom-variant dark (&:is(.dark *));
 
+/* Tailwind tokens -> variables CSS (shadcn/ui) */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================
+   PALETA TRANSDA (oscura)
+   Navy fondo: ~#060B1B   | superficies: ~#0B1229
+   Rojo primario: ~#E11D2F
+   ============================ */
+:root {
+  --radius: 0.75rem;
+
+  /* Fondo por defecto: oscuro (tipo Starlink + Transda) */
+  --background: oklch(0.14 0.035 265);     /* navy muy oscuro */
+  --foreground: oklch(0.98 0.003 248);     /* casi blanco azulado */
+
+  --card: oklch(0.14 0.035 265);
+  --card-foreground: var(--foreground);
+
+  --popover: oklch(0.14 0.035 265);
+  --popover-foreground: var(--foreground);
+
+  /* Rojo marca como primario */
+  --primary: oklch(0.60 0.24 27.3);        /* ~#E11D2F */
+  --primary-foreground: oklch(0.98 0.003 248);
+
+  /* Superficies secundarias (navy un poco más claro) */
+  --secondary: oklch(0.20 0.030 265);
+  --secondary-foreground: var(--foreground);
+
+  /* Muted para inputs/blocks suaves */
+  --muted: oklch(0.22 0.030 265);
+  --muted-foreground: oklch(0.75 0.040 257);
+
+  /* Acento frío para glows/grids */
+  --accent: oklch(0.18 0.050 255);
+  --accent-foreground: var(--foreground);
+
+  /* Destructive (rojo más oscuro) */
+  --destructive: oklch(0.55 0.20 25);
+
+  /* Bordes/inputs: navy grisáceo */
+  --border: oklch(0.28 0.030 260);
+  --input: var(--border);
+
+  /* Focus ring sigue la marca (rojo) */
+  --ring: var(--primary);
+
+  /* Paleta para gráficos (opcional) */
+  --chart-1: oklch(0.65 0.20 40);
+  --chart-2: oklch(0.57 0.12 185);
+  --chart-3: oklch(0.42 0.08 230);
+  --chart-4: oklch(0.85 0.20 85);
+  --chart-5: oklch(0.78 0.18 70);
+
+  /* Sidebar opcional */
+  --sidebar: oklch(0.16 0.035 265);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--muted);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Para ahora, mantenemos mismo esquema al usar .dark (consistencia) */
+.dark {
+  --background: oklch(0.14 0.035 265);
+  --foreground: oklch(0.98 0.003 248);
+
+  --card: oklch(0.14 0.035 265);
+  --card-foreground: var(--foreground);
+
+  --popover: oklch(0.14 0.035 265);
+  --popover-foreground: var(--foreground);
+
+  --primary: oklch(0.60 0.24 27.3);
+  --primary-foreground: oklch(0.98 0.003 248);
+
+  --secondary: oklch(0.20 0.030 265);
+  --secondary-foreground: var(--foreground);
+
+  --muted: oklch(0.22 0.030 265);
+  --muted-foreground: oklch(0.75 0.040 257);
+
+  --accent: oklch(0.18 0.050 255);
+  --accent-foreground: var(--foreground);
+
+  --destructive: oklch(0.55 0.20 25);
+
+  --border: oklch(0.28 0.030 260);
+  --input: var(--border);
+
+  --ring: var(--primary);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { color-scheme: dark; } /* mejora formularios/scrollbars en oscuro */
+  body { @apply bg-background text-foreground antialiased; }
+
+  a { @apply text-foreground/90 hover:text-foreground transition-colors; }
 }

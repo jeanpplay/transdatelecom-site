@@ -1,0 +1,13 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /api/
+
+# Host
+Host: https://www.supercable.co.cr   # o la URL de Vercel si aún no tienes dominio
+
+# Sitemaps
+Sitemap: https://www.supercable.co.cr   # o la URL de Vercel si aún no tienes dominio/sitemap.xml
