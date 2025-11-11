@@ -35,7 +35,7 @@ export default async function Page() {
         {items.map((p: any) => (
           <li
             key={p._id}
-            className="rounded-2xl p-6 ring-1 ring-white/10 bg-white/[0.03]"
+            className="rounded-2xl p-6 ring-1 ring-white/10 bg-white/3"
           >
             <h3 className="text-xl font-semibold">{p.title}</h3>
             <p className="mt-1 text-sm text-zinc-400">

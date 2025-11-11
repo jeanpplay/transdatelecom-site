@@ -14,7 +14,7 @@ export function SiteHeader({
   )}` : undefined;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/40 backdrop-blur supports-[backdrop-filter]:bg-black/40">
+    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/40 backdrop-blur supports-backdrop-filter:bg-black/40">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="font-semibold tracking-tight text-white">
           {brand}
