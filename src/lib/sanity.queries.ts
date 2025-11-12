@@ -17,3 +17,18 @@ export const allFaqsQuery = groq`
   _id, question, answer, order
 }
 `;
+
+/* ---- Home (hero + secciones) ---- */
+export const homePageQuery = groq`
+*[_type=="home"][0]{
+  hero{
+    overTitle, title, subtitle, ctaLabel, align, darken,
+    "asset": media.asset->{url, mimeType, metadata{dimensions}}
+  },
+  sections[]{
+    _type, title, subtitle, text, ctaLabel, ctaHref, align, imageSide, darken,
+    "asset": media.asset->{url, mimeType, metadata{dimensions}},
+    items[]{title, text}
+  }
+}
+`;
