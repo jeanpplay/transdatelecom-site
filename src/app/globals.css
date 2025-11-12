@@ -4,7 +4,9 @@
 /* Tailwind v4 dark variant */
 @custom-variant dark (&:is(.dark *));
 
-/* Tailwind tokens -> variables CSS (shadcn/ui) */
+/* =========================
+   Tokens Tailwind → CSS vars
+   ========================= */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -57,59 +59,54 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* ============================
-   PALETA TRANSDA (oscura)
-   Navy fondo: ~#060B1B   | superficies: ~#0B1229
-   Rojo primario: ~#E11D2F
-   ============================ */
+/* =========================
+   PALETA SPOTT (oscura)
+   Fondo: #0b0e12 | Acento: violeta #8b5cf6
+   ========================= */
 :root {
   --radius: 0.75rem;
 
-  /* Fondo por defecto: oscuro (tipo Starlink + Transda) */
-  --background: oklch(0.14 0.035 265);     /* navy muy oscuro */
-  --foreground: oklch(0.98 0.003 248);     /* casi blanco azulado */
+  /* base “space” */
+  --background: oklch(0.16 0.03 260);     /* ~#0b0e12 */
+  --foreground: oklch(0.98 0.003 248);    /* casi blanco */
 
-  --card: oklch(0.14 0.035 265);
+  --card: oklch(0.16 0.03 260);
   --card-foreground: var(--foreground);
 
-  --popover: oklch(0.14 0.035 265);
+  --popover: oklch(0.16 0.03 260);
   --popover-foreground: var(--foreground);
 
-  /* Rojo marca como primario */
-  --primary: oklch(0.60 0.24 27.3);        /* ~#E11D2F */
-  --primary-foreground: oklch(0.98 0.003 248);
+  /* acento violeta */
+  --primary: oklch(0.68 0.20 300);        /* ~#8b5cf6 */
+  --primary-foreground: oklch(0.99 0.002 250);
 
-  /* Superficies secundarias (navy un poco más claro) */
-  --secondary: oklch(0.20 0.030 265);
+  /* superficies */
+  --secondary: oklch(0.20 0.03 265);
   --secondary-foreground: var(--foreground);
 
-  /* Muted para inputs/blocks suaves */
-  --muted: oklch(0.22 0.030 265);
-  --muted-foreground: oklch(0.75 0.040 257);
+  /* neutros */
+  --muted: oklch(0.22 0.03 265);
+  --muted-foreground: oklch(0.75 0.04 257);
 
-  /* Acento frío para glows/grids */
-  --accent: oklch(0.18 0.050 255);
+  /* glow frío */
+  --accent: oklch(0.18 0.05 255);
   --accent-foreground: var(--foreground);
 
-  /* Destructive (rojo más oscuro) */
   --destructive: oklch(0.55 0.20 25);
 
-  /* Bordes/inputs: navy grisáceo */
-  --border: oklch(0.28 0.030 260);
+  --border: oklch(0.28 0.03 260);
   --input: var(--border);
-
-  /* Focus ring sigue la marca (rojo) */
   --ring: var(--primary);
 
-  /* Paleta para gráficos (opcional) */
+  /* charts opcional */
   --chart-1: oklch(0.65 0.20 40);
   --chart-2: oklch(0.57 0.12 185);
   --chart-3: oklch(0.42 0.08 230);
   --chart-4: oklch(0.85 0.20 85);
   --chart-5: oklch(0.78 0.18 70);
 
-  /* Sidebar opcional */
-  --sidebar: oklch(0.16 0.035 265);
+  /* sidebar */
+  --sidebar: oklch(0.17 0.03 260);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
@@ -119,41 +116,52 @@
   --sidebar-ring: var(--ring);
 }
 
-/* Para ahora, mantenemos mismo esquema al usar .dark (consistencia) */
+/* dark = igual (estamos ya en oscuro) */
 .dark {
-  --background: oklch(0.14 0.035 265);
+  --background: oklch(0.16 0.03 260);
   --foreground: oklch(0.98 0.003 248);
-
-  --card: oklch(0.14 0.035 265);
+  --card: oklch(0.16 0.03 260);
   --card-foreground: var(--foreground);
-
-  --popover: oklch(0.14 0.035 265);
+  --popover: oklch(0.16 0.03 260);
   --popover-foreground: var(--foreground);
-
-  --primary: oklch(0.60 0.24 27.3);
-  --primary-foreground: oklch(0.98 0.003 248);
-
-  --secondary: oklch(0.20 0.030 265);
+  --primary: oklch(0.68 0.20 300);
+  --primary-foreground: oklch(0.99 0.002 250);
+  --secondary: oklch(0.20 0.03 265);
   --secondary-foreground: var(--foreground);
-
-  --muted: oklch(0.22 0.030 265);
-  --muted-foreground: oklch(0.75 0.040 257);
-
-  --accent: oklch(0.18 0.050 255);
+  --muted: oklch(0.22 0.03 265);
+  --muted-foreground: oklch(0.75 0.04 257);
+  --accent: oklch(0.18 0.05 255);
   --accent-foreground: var(--foreground);
-
   --destructive: oklch(0.55 0.20 25);
-
-  --border: oklch(0.28 0.030 260);
+  --border: oklch(0.28 0.03 260);
   --input: var(--border);
-
   --ring: var(--primary);
 }
 
+/* Base */
 @layer base {
   * { @apply border-border outline-ring/50; }
-  html { color-scheme: dark; } /* mejora formularios/scrollbars en oscuro */
+  html { color-scheme: dark; }
   body { @apply bg-background text-foreground antialiased; }
-
   a { @apply text-foreground/90 hover:text-foreground transition-colors; }
 }
+
+/* ===== Helpers visuales (Starlink vibes) ===== */
+
+/* halo + glows para el hero */
+.bg-hero{
+  background:
+    radial-gradient(60% 40% at 50% 18%, rgba(139,92,246,.25), transparent 60%),
+    radial-gradient(40% 30% at 12% 10%, rgba(139,92,246,.14), transparent 60%),
+    radial-gradient(40% 30% at 88% 12%, rgba(167,139,250,.12), transparent 60%);
+}
+
+/* botón primario con el violeta de marca */
+.btn-acc{ background: var(--primary); color: var(--primary-foreground); }
+.btn-acc:hover{ filter: brightness(1.05); }
+
+/* tarjetas con leve vidrio */
+.card-glass{ @apply bg-white/5 ring-1 ring-white/10 rounded-2xl; }
+
+/* borde acentuado al hover */
+.hover-ring{ @apply ring-1 ring-transparent hover:ring-white/20 transition; }
