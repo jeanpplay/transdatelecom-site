@@ -1,16 +1,8 @@
 import Link from "next/link";
 
 export function SiteFooter({
-  phone,
-  whatsapp,
-  address,
-  brand = "Transdatelecom",
-}: {
-  phone?: string;
-  whatsapp?: string;
-  address?: string;
-  brand?: string;
-}) {
+  phone, whatsapp, address, brand = "Spott",
+}: { phone?: string; whatsapp?: string; address?: string; brand?: string }) {
   const wa = (whatsapp || "").replace(/\D/g, "");
   const waHref = wa ? `https://wa.me/${wa}` : undefined;
 
@@ -22,35 +14,14 @@ export function SiteFooter({
             <p className="text-white font-semibold">{brand}</p>
             {address && <p className="text-sm mt-1">{address}</p>}
           </div>
-
           <div className="flex flex-col sm:flex-row gap-3">
-            {phone && (
-              <a className="underline hover:text-white" href={`tel:${phone}`}>
-                {phone}
-              </a>
-            )}
-            {waHref && (
-              <a
-                className="underline hover:text-white"
-                href={waHref}
-                target="_blank"
-                rel="noreferrer"
-              >
-                WhatsApp
-              </a>
-            )}
-            <Link className="underline hover:text-white" href="/soporte">
-              Soporte
-            </Link>
-            <Link className="underline hover:text-white" href="/planes">
-              Planes
-            </Link>
+            {phone && <a className="underline hover:text-white" href={`tel:${phone}`}>{phone}</a>}
+            {waHref && <a className="underline hover:text-white" href={waHref} target="_blank">WhatsApp</a>}
+            <Link className="underline hover:text-white" href="/beneficios">Beneficios</Link>
+            <Link className="underline hover:text-white" href="/contacto">Contacto</Link>
           </div>
         </div>
-
-        <p className="mt-6 text-xs">
-          © {new Date().getFullYear()} {brand}. Todos los derechos reservados.
-        </p>
+        <p className="mt-6 text-xs">© {new Date().getFullYear()} {brand}. Todos los derechos reservados.</p>
       </div>
     </footer>
   );

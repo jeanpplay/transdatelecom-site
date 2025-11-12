@@ -5,40 +5,36 @@ import { SiteFooter } from "@/components/site-footer";
 import { sanityClient } from "@/lib/sanity.client";
 import { siteSettingsQuery } from "@/lib/sanity.queries";
 
-const isProd = process.env.VERCEL_ENV === "production";
-const siteUrl =
-  process.env.SITE_URL ?? "https://transdatelecom-site.vercel.app";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: "Transdatelecom",
-  description: "Internet de alta velocidad y baja latencia",
-  robots: { index: isProd, follow: isProd },
+  metadataBase: new URL("https://transdatelecom-site.vercel.app"), // actualízalo luego
+  title: "Spott — Plataforma OTT de Nueva Generación",
+  description:
+    "Lanza y monetiza tu servicio de streaming con calidad operadora: Live, VOD, FAST, apps multiplataforma y analítica en tiempo real.",
   openGraph: {
-    title: "Transdatelecom",
+    title: "Spott — Plataforma OTT de Nueva Generación",
     description:
-      "Conectividad confiable para hogar y negocio. Instalación rápida, soporte local y cobertura donde otros no llegan.",
-    url: siteUrl,
-    siteName: "Transdatelecom",
-    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Transdatelecom" }],
-    locale: "es_CR",
+      "OTT, Live, FAST, monetización, apps nativas y analítica. Todo en una sola plataforma.",
+    images: ["/og.jpg"],
     type: "website",
   },
-  twitter: { card: "summary_large_image", title: "Transdatelecom" },
+  twitter: {
+    card: "summary_large_image",
+    title: "Spott — Plataforma OTT",
+    description:
+      "OTT, Live, FAST, monetización, apps nativas y analítica. Todo en una sola plataforma.",
+    images: ["/og.jpg"],
+  },
+  themeColor: "#0B0D0E",
 };
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const settings = await sanityClient.fetch(siteSettingsQuery).catch(() => null);
-  const brand = settings?.brand || "Transdatelecom";
+  const brand = settings?.brand || "Spott";
 
   return (
     <html lang="es">
-      <body className="bg-black text-white antialiased">
-        <SiteHeader brand={brand} whatsapp={settings?.whatsapp} />
+      <body className="bg-[#0B0D0E] text-white antialiased">
+        <SiteHeader brand={brand} />
         {children}
         <SiteFooter
           brand={brand}
