@@ -1,36 +1,40 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { sanityClient } from "@/lib/sanity.client";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { sanityClient } from "@/lib/sanity.client"
 import {
   plansByCategoryQuery,
   siteSettingsQuery,
-  homePageQuery,
-} from "@/lib/sanity.queries";
-import { FullBleed } from "@/components/sections/FullBleed";
-import { Split } from "@/components/sections/Split";
-import { Features } from "@/components/sections/Features";
-import { Hero } from "@/components/Hero";
+  homeQuery,            // ⬅️ usar homeQuery
+} from "@/lib/sanity.queries"
 
-export const revalidate = 60;
+import { FullBleed } from "@/components/sections/FullBleed"
+import { Split } from "@/components/sections/Split"
+import { Features } from "@/components/sections/Features"
+import { Hero } from "@/components/Hero"
+
+export const revalidate = 60
 
 export default async function Home() {
   const [home, settings, residencial] = await Promise.all([
-    sanityClient.fetch(homePageQuery).catch(() => null),
+    sanityClient.fetch(homeQuery).catch(() => null),                    // ⬅️ homeQuery
     sanityClient.fetch(siteSettingsQuery).catch(() => null),
-    sanityClient.fetch(plansByCategoryQuery, { category: "residencial" }).catch(() => []),
-  ]);
+    sanityClient
+      .fetch(plansByCategoryQuery, { category: "residencial" })
+      .catch(() => []),
+  ])
 
-  const top = Array.isArray(residencial) ? residencial.slice(0, 3) : [];
+  const top = Array.isArray(residencial) ? residencial.slice(0, 3) : []
 
   return (
     <main className="text-white">
-      {/* Si hay Home en Sanity, pintamos hero full-bleed; si no, usamos el Hero actual */}
+      {/* HERO: si la Home trae hero, úsalo; si no, usa el Hero por defecto */}
       {home?.hero ? (
         <FullBleed
           data={{
             title: home.hero.title,
             subtitle: home.hero.subtitle,
             ctaLabel: home.hero.ctaLabel,
+            ctaHref: home.hero.ctaHref ?? home.hero.ctaUrl,
             align: home.hero.align,
             darken: home.hero.darken,
             asset: home.hero.asset,
@@ -42,7 +46,7 @@ export default async function Home() {
         </div>
       )}
 
-      {/* Secciones dinámicas tipo Starlink (si existen) */}
+      {/* Secciones Starlink-like desde Sanity */}
       {(home?.sections || []).map((s: any, i: number) => {
         if (s._type === "fullBleedSection") {
           return (
@@ -52,20 +56,40 @@ export default async function Home() {
                 title: s.title,
                 subtitle: s.subtitle,
                 ctaLabel: s.ctaLabel,
-                ctaHref: s.ctaHref,
+                ctaHref: s.ctaHref ?? s.ctaUrl,
                 align: s.align,
-                darken: s.darken,
-                asset: s.asset,
+                darken: s.darken ?? s.darkOverlay,
+                asset: s.asset ?? { image: s.image, video: s.video, poster: s.poster },
               }}
             />
-          );
+          )
         }
-        if (s._type === "splitSection") return <Split key={i} data={s} />;
-        if (s._type === "featuresSection") return <Features key={i} data={s} />;
-        return null;
+
+        if (s._type === "splitSection") {
+          return (
+            <Split
+              key={i}
+              data={{
+                title: s.title,
+                text: s.text ?? s.body, // ⬅️ Split espera "text"
+                ctaLabel: s.ctaLabel ?? s.ctaText,
+                ctaHref: s.ctaHref ?? s.ctaUrl,
+                imageSide: s.imageSide,
+                darken: s.darken,
+                asset: s.asset ?? { image: s.image, video: s.video, poster: s.poster },
+              }}
+            />
+          )
+        }
+
+        if (s._type === "featuresSection") {
+          return <Features key={i} data={s} />
+        }
+
+        return null
       })}
 
-      {/* Si aún no hay secciones en Home, dejamos tus “beneficios” + “planes” como fallback */}
+      {/* Fallback si aún no hay secciones en Home */}
       {!home?.sections?.length && (
         <>
           <section className="mx-auto max-w-6xl px-6 py-16">
@@ -121,13 +145,11 @@ export default async function Home() {
                 ))}
               </ul>
             ) : (
-              <p className="text-zinc-400">
-                Pronto publicaremos nuestros mejores planes.
-              </p>
+              <p className="text-zinc-400">Pronto publicaremos nuestros mejores planes.</p>
             )}
           </section>
         </>
       )}
     </main>
-  );
+  )
 }
