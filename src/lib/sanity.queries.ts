@@ -16,25 +16,33 @@ export const allFaqsQuery = groq`
 }
 `
 
-// HOME con secciones (alias consistentes: ctaLabel/ctaHref, image/video/poster, text, items/logos)
+// HOME con secciones (forzamos tamaños y formato)
 export const homeQuery = groq`
 *[_type=="home"][0]{
   sections[]{
     _type,
 
-    // Full-bleed
+    // Full-bleed (fondo grande)
     _type == "fullBleedSection" => {
       _type, label, title, subtitle,
       "ctaLabel": coalesce(ctaLabel, ctaText),
       "ctaHref":  coalesce(ctaHref,  ctaUrl),
       align,
       "darken": coalesce(darken, darkOverlay),
-      "image":  coalesce(media.asset->url, image.asset->url),
-      "video":  video.asset->url,
-      "poster": poster.asset->url
+
+      // Pedimos variantes ligeras a Sanity
+      "image": select(
+        defined(media.asset->url) => media.asset->url + "?auto=format&w=1920",
+        defined(image.asset->url) => image.asset->url + "?auto=format&w=1920"
+      ),
+      "video":  coalesce(video.asset->url, file.asset->url),
+      "poster": coalesce(
+        poster.asset->url, 
+        posterImage.asset->url
+      ) + "?auto=format&w=1920"
     },
 
-    // 50/50
+    // 50/50 (imagen mediana)
     _type == "splitSection" => {
       _type, title,
       "text":     coalesce(text, body),
@@ -42,34 +50,36 @@ export const homeQuery = groq`
       "ctaHref":  coalesce(ctaHref,  ctaUrl),
       imageSide,
       "darken": darken,
-      "image":  coalesce(media.asset->url, image.asset->url),
+      "image": select(
+        defined(media.asset->url) => media.asset->url + "?auto=format&w=1600",
+        defined(image.asset->url) => image.asset->url + "?auto=format&w=1600"
+      ),
       "video":  video.asset->url,
-      "poster": poster.asset->url
+      "poster": poster.asset->url + "?auto=format&w=1600"
     },
 
-    // Features
+    // Features (solo texto/emoji)
     _type == "featuresSection" => {
       _type, title,
       items[]{ icon, title, body }
     },
 
-    // Marquesina de logos
+    // Logos (pequeños)
     _type == "logosMarqueeSection" => {
       _type, title,
-      "logos": logos[]{
-        href,
-        alt,
-        "src": coalesce(image.asset->url, logo.asset->url, file.asset->url, asset->url)
+      "logos": logos[]{ 
+        "src": asset->url + "?auto=format&w=320&fm=png",
+        alt
       }
     },
 
-    // Galería de dispositivos
+    // Galería de dispositivos (cards)
     _type == "devicesStripSection" => {
       _type, title, subtitle,
-      "items": items[]{
-        label,
-        "image":  image.asset->url,
-        "poster": poster.asset->url
+      "items": items[] {
+        title,
+        "image":  media.asset->url + "?auto=format&w=1000",
+        "poster": poster.asset->url + "?auto=format&w=1000"
       }
     },
 
@@ -82,19 +92,14 @@ export const homeQuery = groq`
     // Banda CTA
     _type == "ctaBannerSection" => {
       _type, title, subtitle,
-      "ctaLabel": coalesce(ctaLabel, ctaText),
-      "ctaHref":  coalesce(ctaHref,  ctaUrl)
+      "ctaLabel": ctaLabel,
+      "ctaHref":  ctaUrl
     },
 
-    // Mosaico de medios
+    // Mosaico de medios (grid)
     _type == "mediaMosaicSection" => {
       _type, title, subtitle, darken,
-      // si tu schema lo llama "medias", lo alias a "items"
-      "items": coalesce(items, medias)[]{
-        "image":  coalesce(image.asset->url, media.asset->url, asset->url),
-        "video":  video.asset->url,
-        "poster": poster.asset->url
-      }
+      "items": items[]{ "image": asset->url + "?auto=format&w=1400" }
     }
   }
 }
