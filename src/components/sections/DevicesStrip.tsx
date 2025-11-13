@@ -4,7 +4,6 @@ import BackgroundMedia from "@/components/BackgroundMedia";
 
 type DeviceItem = {
   title?: string;
-  // puede venir como asset o como campos sueltos
   asset?:
     | string
     | { image?: string; video?: string; poster?: string }
@@ -18,8 +17,8 @@ type DeviceItem = {
 
 export function DevicesStrip({
   data,
-  auto = true,        // ← desactiva auto-scroll pasando auto={false}
-  intervalMs = 2800,   // ← tiempo entre “saltos” del auto-scroll
+  auto = true,       // ← desactiva auto-scroll pasando auto={false}
+  intervalMs = 2800, // ← tiempo entre “saltos” del auto-scroll
 }: {
   data: { title?: string; subtitle?: string; items: Array<DeviceItem> };
   auto?: boolean;
@@ -30,7 +29,7 @@ export function DevicesStrip({
   const trackRef = useRef<HTMLUListElement | null>(null);
   const [paused, setPaused] = useState(false);
 
-  // calcula el ancho de una tarjeta + gap (aprox. gap-6 = 24px)
+  // ancho de una tarjeta + gap (gap-6 = 24px)
   const cardWidth = () => {
     const el = trackRef.current;
     if (!el) return 0;
@@ -47,14 +46,14 @@ export function DevicesStrip({
 
     el.scrollBy({ left: dir * dist, behavior: "smooth" });
 
-    // loop: si estamos al final y vamos a la derecha, vuelve al inicio
+    // loop al final
     const nearEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - dist / 2;
     if (dir === 1 && nearEnd) {
       setTimeout(() => el.scrollTo({ left: 0, behavior: "smooth" }), 260);
     }
   };
 
-  // auto-scroll suave
+  // auto-scroll
   useEffect(() => {
     if (!auto) return;
     const el = trackRef.current;
@@ -67,7 +66,7 @@ export function DevicesStrip({
     return () => clearInterval(id);
   }, [auto, paused, intervalMs]);
 
-  // drag-to-scroll con pointer events
+  // drag-to-scroll
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
@@ -106,7 +105,7 @@ export function DevicesStrip({
 
   return (
     <section
-      className="relative border-t border-white/5 bg-black"
+      className="relative border-t border-[var(--border)] bg-[var(--card)]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={() => setPaused(true)}
@@ -114,12 +113,14 @@ export function DevicesStrip({
     >
       <div className="mx-auto max-w-6xl px-6 py-16">
         {data.title && <h3 className="text-3xl font-semibold mb-2">{data.title}</h3>}
-        {data.subtitle && <p className="text-zinc-300 mb-6">{data.subtitle}</p>}
+        {data.subtitle && (
+          <p className="text-[var(--muted-foreground)] mb-6">{data.subtitle}</p>
+        )}
 
         <div className="relative">
-          {/* Gradientes laterales para insinuar scroll */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-black to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-black to-transparent" />
+          {/* Gradientes laterales para insinuar scroll (con el color del card) */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[var(--card)] to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[var(--card)] to-transparent" />
 
           <ul
             ref={trackRef}
@@ -139,7 +140,7 @@ export function DevicesStrip({
               return (
                 <li
                   key={i}
-                  className="relative h-64 w-[85vw] max-w-[520px] shrink-0 snap-start overflow-clip rounded-2xl ring-1 ring-white/10 md:w-[520px]"
+                  className="relative h-64 w-[85vw] max-w-[520px] shrink-0 snap-start overflow-clip rounded-2xl ring-1 ring-[var(--border)] md:w-[520px]"
                 >
                   <BackgroundMedia asset={asset} />
                   <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-black/20 to-black/20" />
@@ -158,10 +159,10 @@ export function DevicesStrip({
             type="button"
             aria-label="Anterior"
             onClick={() => scrollByCards(-1)}
-            className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/55 p-2 ring-1 ring-white/10 backdrop-blur
-                       hover:bg-black/70 focus:outline-none focus-visible:ring-2"
+            className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-[var(--card)]/60 p-2 ring-1 ring-[var(--border)] backdrop-blur
+                       hover:bg-[var(--card)]/70 focus:outline-none focus-visible:ring-2"
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" className="text-white/90">
+            <svg width="22" height="22" viewBox="0 0 24 24" className="text-foreground/90">
               <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
@@ -169,10 +170,10 @@ export function DevicesStrip({
             type="button"
             aria-label="Siguiente"
             onClick={() => scrollByCards(1)}
-            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/55 p-2 ring-1 ring-white/10 backdrop-blur
-                       hover:bg-black/70 focus:outline-none focus-visible:ring-2"
+            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-[var(--card)]/60 p-2 ring-1 ring-[var(--border)] backdrop-blur
+                       hover:bg-[var(--card)]/70 focus:outline-none focus-visible:ring-2"
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" className="text-white/90">
+            <svg width="22" height="22" viewBox="0 0 24 24" className="text-foreground/90">
               <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>

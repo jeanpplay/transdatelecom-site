@@ -31,7 +31,7 @@ export function SiteFooter({
               className="h-7 w-7 rounded-full object-contain"
             />
             <div>
-              <p className="text-white font-semibold">{brand}</p>
+              <p className="text-foreground font-semibold">{brand}</p>
               {address && <p className="mt-1 text-sm">{address}</p>}
             </div>
           </div>
@@ -69,3 +69,4 @@ export function SiteFooter({
     </footer>
   );
 }
+

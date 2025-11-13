@@ -48,7 +48,9 @@ export function SiteHeader({
             priority
             className="h-7 w-7 rounded-full object-contain"
           />
-          <span className="font-semibold tracking-wide text-white">{brand}</span>
+          <span className="font-semibold tracking-wide text-foreground">
+            {brand}
+          </span>
         </Link>
 
         {/* Nav */}
@@ -61,7 +63,7 @@ export function SiteHeader({
                 key={item.href}
                 href={item.href}
                 className={`transition hover:text-[var(--primary)] ${
-                  active ? "text-white underline underline-offset-4" : ""
+                  active ? "text-foreground underline underline-offset-4" : ""
                 }`}
               >
                 {item.label}

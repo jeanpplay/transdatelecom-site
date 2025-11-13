@@ -38,7 +38,7 @@ export default async function RootLayout({
 
   return (
     <html lang="es">
-      {/* Usa tokens del tema (no hex directo) */}
+      {/* Usa tokens del tema */}
       <body className="relative min-h-screen overflow-x-hidden bg-background text-foreground antialiased">
         {/* Fondo sutil (topo o grid) */}
         <SiteBackdrop variant="topo" opacity={0.16} />
