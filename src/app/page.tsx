@@ -18,9 +18,7 @@ export default async function Home() {
   const [home, settings, residencial] = await Promise.all([
     sanityClient.fetch(homeQuery).catch(() => null),
     sanityClient.fetch(siteSettingsQuery).catch(() => null),
-    sanityClient
-      .fetch(plansByCategoryQuery, { category: "residencial" })
-      .catch(() => []),
+    sanityClient.fetch(plansByCategoryQuery, { category: "residencial" }).catch(() => []),
   ])
 
   const top = Array.isArray(residencial) ? residencial.slice(0, 3) : []
@@ -28,9 +26,7 @@ export default async function Home() {
   // Si la primera sección es full-bleed, úsala como HERO con imagen
   const first = home?.sections?.[0]
   const heroFromSections = first?._type === "fullBleedSection" ? first : null
-  const restSections = heroFromSections
-    ? home.sections.slice(1)
-    : (home?.sections || [])
+  const restSections = heroFromSections ? home.sections.slice(1) : (home?.sections || [])
 
   return (
     <main className="text-white">
@@ -44,12 +40,12 @@ export default async function Home() {
             ctaHref: (heroFromSections as any).ctaHref ?? (heroFromSections as any).ctaUrl,
             align: (heroFromSections as any).align,
             darken: (heroFromSections as any).darken ?? (heroFromSections as any).darkOverlay,
-            // BackgroundMedia acepta objeto {image,video,poster} o asset con url
-            asset: (heroFromSections as any).asset ?? {
-              image: (heroFromSections as any).image,
-              video: (heroFromSections as any).video,
-              poster: (heroFromSections as any).poster,
-            },
+            asset:
+              (heroFromSections as any).asset ?? {
+                image: (heroFromSections as any).image,
+                video: (heroFromSections as any).video,
+                poster: (heroFromSections as any).poster,
+              },
           }}
         />
       ) : (
@@ -76,6 +72,7 @@ export default async function Home() {
             />
           )
         }
+
         if (s._type === "splitSection") {
           return (
             <Split
@@ -92,9 +89,11 @@ export default async function Home() {
             />
           )
         }
+
         if (s._type === "featuresSection") {
           return <Features key={`ft-${i}`} data={s} />
         }
+
         return null
       })}
 
@@ -103,18 +102,10 @@ export default async function Home() {
         <section className="mx-auto max-w-6xl px-6 py-16">
           <h2 className="text-2xl font-semibold mb-6">¿Por qué elegirnos?</h2>
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-sm text-zinc-300">
-            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">
-              ⚡ Baja latencia para Live, VOD y gaming.
-            </li>
-            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">
-              📍 Soporte local y respuesta rápida.
-            </li>
-            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">
-              🔒 Plataforma estable y segura.
-            </li>
-            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">
-              🚀 Despliegue ágil y multipantalla.
-            </li>
+            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">⚡ Baja latencia para Live, VOD y gaming.</li>
+            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">📍 Soporte local y respuesta rápida.</li>
+            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">🔒 Plataforma estable y segura.</li>
+            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">🚀 Despliegue ágil y multipantalla.</li>
           </ul>
         </section>
       )}
@@ -134,9 +125,7 @@ export default async function Home() {
               <li key={p._id} className="card-glass hover-ring p-6">
                 <h3 className="text-xl font-semibold">{p.title}</h3>
                 <p className="mt-1 text-sm text-zinc-400">
-                  {typeof p.price === "number"
-                    ? `₡${p.price.toLocaleString("es-CR")}/mes`
-                    : "Precio a consultar"}
+                  {typeof p.price === "number" ? `₡${p.price.toLocaleString("es-CR")}/mes` : "Precio a consultar"}
                 </p>
                 <p className="mt-2 text-sm">
                   {p.down}↓ / {p.up}↑ Mbps
