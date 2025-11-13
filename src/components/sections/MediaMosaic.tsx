@@ -20,7 +20,8 @@ export function MediaMosaic({
 }) {
   if (!data?.items?.length) return null;
 
-  const overlay = typeof data.darken === "number" ? data.darken : 0.15;
+  // Un poco más de overlay por defecto para armonizar con el diseño
+  const overlay = typeof data.darken === "number" ? data.darken : 0.22;
 
   return (
     <section className="relative border-t border-[var(--border)] bg-[var(--card)]">
@@ -46,11 +47,10 @@ export function MediaMosaic({
                 className="relative aspect-[16/10] overflow-clip rounded-2xl ring-1 ring-[var(--border)]"
               >
                 <BackgroundMedia asset={asset} />
-                {/* Overlay de lectura: mantenemos un leve oscurecido */}
                 <div
                   className="absolute inset-0 z-10"
                   style={{
-                    background: `linear-gradient(180deg, rgba(0,0,0,${overlay}) 0%, rgba(0,0,0,0.2) 100%)`,
+                    background: `linear-gradient(180deg, rgba(0,0,0,${overlay}) 0%, rgba(0,0,0,0.25) 100%)`,
                   }}
                 />
               </div>

@@ -126,8 +126,7 @@ export function DevicesStrip({
 
           <ul
             ref={trackRef}
-            className="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-2
-                       [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             aria-label="Dispositivos disponibles"
           >
             {data.items.map((it, i) => {
@@ -145,7 +144,8 @@ export function DevicesStrip({
                   className="relative h-64 w-[85vw] max-w-[520px] shrink-0 snap-start overflow-clip rounded-2xl ring-1 ring-[var(--border)] md:w-[520px]"
                 >
                   <BackgroundMedia asset={asset} />
-                  <div className="absolute inset-0 z-10 bg-gradient-to-t from-[var(--background)]/60 via-[var(--background)]/20 to-[var(--background)]/20" />
+                  {/* Un poco más oscuro para integrar con el tema */}
+                  <div className="absolute inset-0 z-10 bg-gradient-to-t from-[var(--background)]/70 via-[var(--background)]/30 to-[var(--background)]/25" />
                   {it.title && (
                     <div className="absolute bottom-3 left-4 z-20 text-sm font-medium">
                       {it.title}
@@ -161,8 +161,7 @@ export function DevicesStrip({
             type="button"
             aria-label="Anterior"
             onClick={() => scrollByCards(-1)}
-            className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-[var(--card)]/60 p-2 ring-1 ring-[var(--border)] backdrop-blur
-                       hover:bg-[var(--card)]/70 focus:outline-none focus-visible:ring-2"
+            className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-[var(--card)]/60 p-2 ring-1 ring-[var(--border)] backdrop-blur hover:bg-[var(--card)]/70 focus:outline-none focus-visible:ring-2"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" className="text-foreground/90">
               <path
@@ -179,8 +178,7 @@ export function DevicesStrip({
             type="button"
             aria-label="Siguiente"
             onClick={() => scrollByCards(1)}
-            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-[var(--card)]/60 p-2 ring-1 ring-[var(--border)] backdrop-blur
-                       hover:bg-[var(--card)]/70 focus:outline-none focus-visible:ring-2"
+            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-[var(--card)]/60 p-2 ring-1 ring-[var(--border)] backdrop-blur hover:bg-[var(--card)]/70 focus:outline-none focus-visible:ring-2"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" className="text-foreground/90">
               <path

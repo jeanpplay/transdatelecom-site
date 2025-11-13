@@ -66,19 +66,20 @@
   --radius: 0.75rem;
 
   /* Base azul muy oscuro + texto blanco suave */
-  --background: oklch(0.16 0.03 260);      /* #0b0e12 aprox */
+  --background: oklch(0.16 0.03 260);      /* ~#0b0e12 */
   --foreground: oklch(0.98 0.003 248);
 
   /* Superficies */
   --card: oklch(0.16 0.03 260);
   --card-foreground: var(--foreground);
-
   --popover: oklch(0.16 0.03 260);
   --popover-foreground: var(--foreground);
 
-  /* Brand morado */
-  --primary: oklch(0.68 0.20 300);          /* ~#7C3AED */
+  /* Brand morado (principal) */
+  --primary: oklch(0.68 0.20 300);
   --primary-foreground: oklch(0.99 0.002 250);
+  /* Morado más oscuro solo para botones/hover */
+  --primary-dark: color-mix(in oklab, var(--primary) 70%, black);
 
   /* Apoyos */
   --secondary: oklch(0.20 0.03 265);
@@ -96,6 +97,9 @@
   --border: oklch(0.28 0.03 260);
   --input: var(--border);
   --ring: var(--primary);
+
+  /* Superficie alterna (un poquito más clara) para secciones “zebradas” */
+  --section-alt: oklch(0.19 0.03 260);     /* +lum que background */
 
   /* Charts */
   --chart-1: oklch(0.65 0.20 40);
@@ -125,6 +129,7 @@
   --popover-foreground: var(--foreground);
   --primary: oklch(0.68 0.20 300);
   --primary-foreground: oklch(0.99 0.002 250);
+  --primary-dark: color-mix(in oklab, var(--primary) 70%, black);
   --secondary: oklch(0.20 0.03 265);
   --secondary-foreground: var(--foreground);
   --muted: oklch(0.22 0.03 265);
@@ -146,19 +151,22 @@
 
 /* ===== Helpers visuales ===== */
 
-/* Glow sutil estilo Starlink pero con morados/azules */
+/* Sección alterna (un pelín más clara) */
+.section-alt { background: var(--section-alt); }
+
+/* Glow sutil estilo Starlink (morado/azules) */
 .bg-hero{
   background:
-    radial-gradient(60% 40% at 50% 18%, rgba(139,92,246,.25), transparent 60%),
-    radial-gradient(40% 30% at 12% 10%, rgba(139,92,246,.14), transparent 60%),
-    radial-gradient(40% 30% at 88% 12%, rgba(167,139,250,.12), transparent 60%),
+    radial-gradient(60% 40% at 50% 18%, rgba(139,92,246,.22), transparent 60%),
+    radial-gradient(40% 30% at 12% 10%, rgba(139,92,246,.12), transparent 60%),
+    radial-gradient(40% 30% at 88% 12%, rgba(167,139,250,.10), transparent 60%),
     var(--background);
 }
 
-/* Botón principal con degradé y micro-interacción */
+/* Botón principal: morado más oscuro (no lila) */
 .btn-acc{
   @apply rounded-xl px-4 py-2 font-semibold shadow-sm;
-  background: linear-gradient(135deg, oklch(0.68 0.20 300), oklch(0.74 0.16 300));
+  background: linear-gradient(135deg, var(--primary-dark), color-mix(in oklab, var(--primary), black 15%));
   color: var(--primary-foreground);
   border: 1px solid color-mix(in oklab, var(--primary) 35%, transparent);
   transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
@@ -167,7 +175,7 @@
 .btn-acc:active{ transform: translateY(0); }
 .btn-acc:focus-visible{ outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 35%, transparent); }
 
-/* Tarjetas tipo “glass” sobre superficies */
+/* Tarjetas tipo “glass” */
 .card-glass{
   background:
     linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)),
@@ -181,6 +189,30 @@
 .hover-ring:hover{
   box-shadow: 0 10px 24px rgba(0,0,0,.35);
   border-color: color-mix(in oklab, var(--primary) 45%, transparent);
+}
+
+/* Tarjeta/pill reutilizable (para Features y Stats) */
+.tile{
+  background: color-mix(in oklab, var(--background) 90%, white 10%);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.tile:hover{
+  background: color-mix(in oklab, var(--primary-dark) 18%, var(--card));
+  border-color: color-mix(in oklab, var(--primary) 50%, var(--border));
+  box-shadow: 0 6px 18px rgba(0,0,0,.28);
+  transform: translateY(-1px);
+}
+
+/* Atenuar medios (imagenes/video) sin tocar contenido */
+.media-dim { filter: brightness(.9) saturate(.95); }
+.media-dim-strong { filter: brightness(.84) saturate(.94); }
+
+/* Overlay opcional para oscurecer un poco más */
+.media-overlay::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(120% 80% at 50% 20%, rgba(0,0,0,.18), rgba(0,0,0,.32));
 }
 
 /* (opcional) glow extra para secciones */

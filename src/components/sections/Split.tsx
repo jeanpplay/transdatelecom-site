@@ -32,23 +32,20 @@ export function Split({
   };
 }) {
   const left = data.imageSide === "left";
-
   const media: Asset | undefined =
     typeof data.asset === "string" ? { url: data.asset } : data.asset;
 
   return (
     <section className="relative border-t border-[var(--border)] bg-[var(--card)]">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-6 py-20 md:grid-cols-2">
-        {/* Tarjeta de media */}
+        {/* Tarjeta de media (ligeramente más oscura para integrarse) */}
         <div
           className={`relative order-2 min-h-[360px] overflow-clip rounded-2xl ring-1 ring-[var(--border)] ${
             left ? "md:order-1" : ""
           }`}
         >
-          {/* Fondo en z-0 */}
           <BackgroundMedia asset={media} />
-          {/* Overlay sobre la imagen/video (con tokens del tema) */}
-          <div className="absolute inset-0 z-[1] bg-gradient-to-t from-[var(--background)]/60 via-[var(--background)]/20 to-[var(--background)]/10" />
+          <div className="absolute inset-0 z-[1] bg-gradient-to-t from-[var(--background)]/70 via-[var(--background)]/25 to-[var(--background)]/20" />
         </div>
 
         {/* Texto */}
