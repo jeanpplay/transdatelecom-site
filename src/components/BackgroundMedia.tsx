@@ -37,8 +37,8 @@ export default function BackgroundMedia({
     const maybeVideo = (asset as any).video as string | undefined;
     const maybePoster = (asset as any).poster as string | undefined;
     const maybeImage = (asset as any).image as string | undefined;
-    const maybeUrl   = (asset as any).url   as string | undefined;
-    const maybeMime  = (asset as any).mimeType as string | undefined;
+    const maybeUrl = (asset as any).url as string | undefined;
+    const maybeMime = (asset as any).mimeType as string | undefined;
 
     if (maybeVideo) {
       videoUrl = maybeVideo;
@@ -51,9 +51,8 @@ export default function BackgroundMedia({
     }
   }
 
-  // 👇 Importante: sin z negativo
   return (
-    <div className={`absolute inset-0 z-0 ${className}`}>
+    <div className={`absolute inset-0 z-0 pointer-events-none ${className}`}>
       {videoUrl ? (
         <video
           className="h-full w-full object-cover"
@@ -73,6 +72,8 @@ export default function BackgroundMedia({
           sizes="100vw"
           className="object-cover"
           priority={priority}
+          // Parche seguro: evita que Next bloquee mientras se propaga el config
+          unoptimized
         />
       ) : null}
     </div>
