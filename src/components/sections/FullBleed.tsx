@@ -5,11 +5,18 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import BackgroundMedia from "@/components/BackgroundMedia";
 
-type MediaObj = {
+// Tipos de media que podemos recibir
+type FileMedia = {
   url?: string;
   mimeType?: string;
   metadata?: { dimensions?: { width: number; height: number } };
 };
+type StarlinkMedia = {
+  image?: string;
+  video?: string;
+  poster?: string;
+};
+type Asset = string | FileMedia | StarlinkMedia;
 
 export function FullBleed({
   data,
@@ -21,8 +28,8 @@ export function FullBleed({
     ctaHref?: string;
     align?: "left" | "center" | "right";
     darken?: number;
-    /** Puede venir como URL o como objeto Sanity */
-    asset?: string | MediaObj;
+    /** Puede venir como URL, objeto Sanity (url/mimeType) o {image,video,poster} */
+    asset?: Asset;
   };
 }) {
   const align = data.align ?? "center";
@@ -35,24 +42,28 @@ export function FullBleed({
       ? "items-end text-right"
       : "items-center text-center";
 
-  // Normaliza: si es string, lo convertimos a objeto con {url}
-  const media: MediaObj | undefined =
+  // Si viene string, lo pasamos como {url}; si viene objeto, se pasa tal cual.
+  const media: Asset | undefined =
     typeof data.asset === "string" ? { url: data.asset } : data.asset;
 
   return (
     <section className="relative min-h-[88svh] overflow-clip">
+      {/* Fondo en z-0 */}
       <BackgroundMedia asset={media} priority />
+
+      {/* Overlay encima del fondo */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 z-[1]"
         style={{
-          background: `linear-gradient(180deg, rgba(0,0,0,${
-            overlay + 0.2
-          }) 0%, rgba(0,0,0,${overlay}) 50%, rgba(0,0,0,${
-            overlay + 0.3
-          }) 100%)`,
+          background: `linear-gradient(180deg,
+            rgba(0,0,0,${overlay + 0.2}) 0%,
+            rgba(0,0,0,${overlay}) 50%,
+            rgba(0,0,0,${overlay + 0.3}) 100%)`,
         }}
       />
-      <div className="relative mx-auto grid max-w-6xl px-6 py-28">
+
+      {/* Contenido por encima de todo */}
+      <div className="relative z-[2] mx-auto grid max-w-6xl px-6 py-28">
         <motion.div
           className={`flex w-full flex-col gap-4 ${alignClasses}`}
           initial={{ opacity: 0, y: 20 }}

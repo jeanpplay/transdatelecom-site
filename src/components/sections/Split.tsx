@@ -5,11 +5,17 @@ import Link from "next/link";
 import BackgroundMedia from "@/components/BackgroundMedia";
 import { Button } from "@/components/ui/button";
 
-type MediaObj = {
+type FileMedia = {
   url?: string;
   mimeType?: string;
   metadata?: { dimensions?: { width: number; height: number } };
 };
+type StarlinkMedia = {
+  image?: string;
+  video?: string;
+  poster?: string;
+};
+type Asset = string | FileMedia | StarlinkMedia;
 
 export function Split({
   data,
@@ -21,27 +27,31 @@ export function Split({
     ctaHref?: string;
     imageSide?: "left" | "right";
     darken?: number;
-    /** Puede venir como URL o como objeto Sanity */
-    asset?: string | MediaObj;
+    /** Puede venir como URL, objeto Sanity (url/mimeType) o {image,video,poster} */
+    asset?: Asset;
   };
 }) {
   const left = data.imageSide === "left";
 
-  const media: MediaObj | undefined =
+  const media: Asset | undefined =
     typeof data.asset === "string" ? { url: data.asset } : data.asset;
 
   return (
     <section className="relative bg-black">
       <div className="mx-auto grid max-w-6xl grid-cols-1 md:grid-cols-2 gap-8 px-6 py-20">
+        {/* Tarjeta de media */}
         <div
           className={`relative min-h-[360px] rounded-2xl overflow-clip ring-1 ring-white/10 order-2 ${
             left ? "md:order-1" : ""
           }`}
         >
+          {/* Fondo en z-0 */}
           <BackgroundMedia asset={media} />
-          <div className="absolute inset-0 bg-black/25" />
+          {/* Overlay sobre la imagen/video */}
+          <div className="absolute inset-0 z-[1] bg-black/25" />
         </div>
 
+        {/* Texto */}
         <motion.div
           className={`flex flex-col justify-center gap-4 order-1 ${
             left ? "md:order-2" : ""
