@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import BackgroundMedia from "@/components/BackgroundMedia";
 
+// Tipos
 type FileMedia = {
   url?: string;
   mimeType?: string;
@@ -22,16 +23,20 @@ export function FullBleed({
     ctaLabel?: string;
     ctaHref?: string;
     align?: "left" | "center" | "right";
-    darken?: number;
-    /** cualquiera de estas dos formas puede venir desde Sanity */
-    asset?: Asset;
-    image?: string;
-    video?: string;
-    poster?: string;
+    darken?: number | boolean; // ← puede venir boolean en Sanity
+    asset?: Asset;             // ← {image, video, poster} o string/url
   };
 }) {
   const align = data.align ?? "center";
-  const overlay = typeof data.darken === "number" ? data.darken : 0.35;
+
+  // Si viene boolean, lo convertimos a un valor razonable
+  const baseDarken =
+    typeof data.darken === "number" ? data.darken : data.darken ? 0.35 : 0.28;
+
+  // Limitar para que nunca “mate” la foto
+  const top = Math.min(baseDarken + 0.15, 0.45);
+  const mid = Math.max(baseDarken - 0.10, 0.10);
+  const bot = Math.min(baseDarken + 0.25, 0.65);
 
   const alignClasses =
     align === "left"
@@ -40,27 +45,27 @@ export function FullBleed({
       ? "items-end text-right"
       : "items-center text-center";
 
-  // 🔧 Normalizamos: si no viene `asset`, armamos uno con image/video/poster
-  let media: Asset | undefined;
-  if (data.asset) {
-    media = typeof data.asset === "string" ? { url: data.asset } : data.asset;
-  } else if (data.image || data.video || data.poster) {
-    media = { image: data.image, video: data.video, poster: data.poster };
-  }
+  // Normalizar asset: si es string -> { url }
+  const media: Asset | undefined =
+    typeof data.asset === "string" ? { url: data.asset } : data.asset;
 
   return (
     <section className="relative min-h-[88svh] overflow-clip">
-      {/* Fondo */}
-      {media && <BackgroundMedia asset={media} priority />}
+      {/* Fondo (queda por debajo) */}
+      <div className="absolute inset-0 z-0">
+        <BackgroundMedia asset={media} priority />
+      </div>
 
-      {/* Overlay */}
+      {/* Overlay: que NO bloquee interacciones y no tape por completo */}
       <div
-        className="absolute inset-0 z-[1]"
+        className="pointer-events-none absolute inset-0 z-[1]"
         style={{
-          background: `linear-gradient(180deg,
-            rgba(0,0,0,${overlay + 0.2}) 0%,
-            rgba(0,0,0,${overlay}) 50%,
-            rgba(0,0,0,${overlay + 0.3}) 100%)`,
+          background: `linear-gradient(
+            180deg,
+            rgba(0,0,0,${top}) 0%,
+            rgba(0,0,0,${mid}) 50%,
+            rgba(0,0,0,${bot}) 100%
+          )`,
         }}
       />
 
