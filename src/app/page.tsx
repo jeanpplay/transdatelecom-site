@@ -4,7 +4,7 @@ import { sanityClient } from "@/lib/sanity.client"
 import {
   plansByCategoryQuery,
   siteSettingsQuery,
-  homeQuery,            // ⬅️ usar homeQuery
+  homeQuery,
 } from "@/lib/sanity.queries"
 
 import { FullBleed } from "@/components/sections/FullBleed"
@@ -16,7 +16,7 @@ export const revalidate = 60
 
 export default async function Home() {
   const [home, settings, residencial] = await Promise.all([
-    sanityClient.fetch(homeQuery).catch(() => null),                    // ⬅️ homeQuery
+    sanityClient.fetch(homeQuery).catch(() => null),
     sanityClient.fetch(siteSettingsQuery).catch(() => null),
     sanityClient
       .fetch(plansByCategoryQuery, { category: "residencial" })
@@ -24,74 +24,65 @@ export default async function Home() {
   ])
 
   const top = Array.isArray(residencial) ? residencial.slice(0, 3) : []
+  const sections = home?.sections ?? []
 
   return (
     <main className="text-white">
-      {/* HERO: si la Home trae hero, úsalo; si no, usa el Hero por defecto */}
-      {home?.hero ? (
-        <FullBleed
-          data={{
-            title: home.hero.title,
-            subtitle: home.hero.subtitle,
-            ctaLabel: home.hero.ctaLabel,
-            ctaHref: home.hero.ctaHref ?? home.hero.ctaUrl,
-            align: home.hero.align,
-            darken: home.hero.darken,
-            asset: home.hero.asset,
-          }}
-        />
-      ) : (
-        <div className="bg-hero">
-          <Hero settings={settings ?? {}} />
-        </div>
-      )}
-
-      {/* Secciones Starlink-like desde Sanity */}
-      {(home?.sections || []).map((s: any, i: number) => {
-        if (s._type === "fullBleedSection") {
-          return (
-            <FullBleed
-              key={i}
-              data={{
-                title: s.title,
-                subtitle: s.subtitle,
-                ctaLabel: s.ctaLabel,
-                ctaHref: s.ctaHref ?? s.ctaUrl,
-                align: s.align,
-                darken: s.darken ?? s.darkOverlay,
-                asset: s.asset ?? { image: s.image, video: s.video, poster: s.poster },
-              }}
-            />
-          )
-        }
-
-        if (s._type === "splitSection") {
-          return (
-            <Split
-              key={i}
-              data={{
-                title: s.title,
-                text: s.text ?? s.body, // ⬅️ Split espera "text"
-                ctaLabel: s.ctaLabel ?? s.ctaText,
-                ctaHref: s.ctaHref ?? s.ctaUrl,
-                imageSide: s.imageSide,
-                darken: s.darken,
-                asset: s.asset ?? { image: s.image, video: s.video, poster: s.poster },
-              }}
-            />
-          )
-        }
-
-        if (s._type === "featuresSection") {
-          return <Features key={i} data={s} />
-        }
-
-        return null
-      })}
-
-      {/* Fallback si aún no hay secciones en Home */}
-      {!home?.sections?.length && (
+      {/* Si hay secciones en Home (Sanity), las rendereamos en orden.
+          Si no hay, usamos el Hero + fallback clásico. */}
+      {sections.length > 0 ? (
         <>
+          {sections.map((s: any, i: number) => {
+            if (s._type === "fullBleedSection") {
+              return (
+                <FullBleed
+                  key={`fb-${i}`}
+                  data={{
+                    title: s.title,
+                    subtitle: s.subtitle,
+                    ctaLabel: s.ctaLabel ?? s.ctaText,
+                    ctaHref: s.ctaHref ?? s.ctaUrl,
+                    align: s.align,
+                    darken: s.darken ?? s.darkOverlay,
+                    // puede venir como s.asset (obj) o como string (image/video url)
+                    asset: s.asset ?? s.image ?? s.video ?? undefined,
+                  }}
+                />
+              )
+            }
+
+            if (s._type === "splitSection") {
+              return (
+                <Split
+                  key={`sp-${i}`}
+                  data={{
+                    title: s.title,
+                    text: s.text ?? s.body,
+                    ctaLabel: s.ctaLabel ?? s.ctaText,
+                    ctaHref: s.ctaHref ?? s.ctaUrl,
+                    imageSide: s.imageSide,
+                    darken: s.darken,
+                    asset: s.asset ?? s.image ?? s.video ?? undefined,
+                  }}
+                />
+              )
+            }
+
+            if (s._type === "featuresSection") {
+              return <Features key={`ft-${i}`} data={s} />
+            }
+
+            return null
+          })}
+        </>
+      ) : (
+        <>
+          {/* Fallback: Hero actual */}
+          <div className="bg-hero">
+            <Hero settings={settings ?? {}} />
+          </div>
+
+          {/* Beneficios (fallback) */}
           <section className="mx-auto max-w-6xl px-6 py-16">
             <h2 className="text-2xl font-semibold mb-6">¿Por qué elegirnos?</h2>
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-sm text-zinc-300">
@@ -110,6 +101,7 @@ export default async function Home() {
             </ul>
           </section>
 
+          {/* Planes destacados (fallback) */}
           <section className="mx-auto max-w-6xl px-6 pb-16">
             <div className="mb-6 flex items-end justify-between">
               <h2 className="text-2xl font-semibold">Planes destacados</h2>
