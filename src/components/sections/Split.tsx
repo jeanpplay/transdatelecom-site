@@ -37,23 +37,23 @@ export function Split({
     typeof data.asset === "string" ? { url: data.asset } : data.asset;
 
   return (
-    <section className="relative bg-black">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 md:grid-cols-2 gap-8 px-6 py-20">
+    <section className="relative border-t border-[var(--border)] bg-[var(--card)]">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-6 py-20 md:grid-cols-2">
         {/* Tarjeta de media */}
         <div
-          className={`relative min-h-[360px] rounded-2xl overflow-clip ring-1 ring-white/10 order-2 ${
+          className={`relative order-2 min-h-[360px] overflow-clip rounded-2xl ring-1 ring-[var(--border)] ${
             left ? "md:order-1" : ""
           }`}
         >
           {/* Fondo en z-0 */}
           <BackgroundMedia asset={media} />
-          {/* Overlay sobre la imagen/video */}
-          <div className="absolute inset-0 z-[1] bg-black/25" />
+          {/* Overlay sobre la imagen/video (con tokens del tema) */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-t from-[var(--background)]/60 via-[var(--background)]/20 to-[var(--background)]/10" />
         </div>
 
         {/* Texto */}
         <motion.div
-          className={`flex flex-col justify-center gap-4 order-1 ${
+          className={`order-1 flex flex-col justify-center gap-4 ${
             left ? "md:order-2" : ""
           }`}
           initial={{ opacity: 0, y: 20 }}
@@ -62,7 +62,7 @@ export function Split({
           transition={{ duration: 0.6 }}
         >
           {data.title && <h3 className="text-3xl font-semibold">{data.title}</h3>}
-          {data.text && <p className="text-zinc-300">{data.text}</p>}
+          {data.text && <p className="text-[var(--muted-foreground)]">{data.text}</p>}
           {data.ctaLabel && (
             <div className="pt-2">
               <Button asChild variant="outline">

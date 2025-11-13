@@ -17,7 +17,7 @@ type DeviceItem = {
 
 export function DevicesStrip({
   data,
-  auto = true,       // ← desactiva auto-scroll pasando auto={false}
+  auto = true, // ← desactiva auto-scroll pasando auto={false}
   intervalMs = 2800, // ← tiempo entre “saltos” del auto-scroll
 }: {
   data: { title?: string; subtitle?: string; items: Array<DeviceItem> };
@@ -90,7 +90,9 @@ export function DevicesStrip({
     const onUp = (e: PointerEvent) => {
       isDown = false;
       setPaused(false);
-      try { el.releasePointerCapture(e.pointerId); } catch {}
+      try {
+        el.releasePointerCapture(e.pointerId);
+      } catch {}
     };
 
     el.addEventListener("pointerdown", onDown);
@@ -112,9 +114,9 @@ export function DevicesStrip({
       onTouchEnd={() => setPaused(false)}
     >
       <div className="mx-auto max-w-6xl px-6 py-16">
-        {data.title && <h3 className="text-3xl font-semibold mb-2">{data.title}</h3>}
+        {data.title && <h3 className="mb-2 text-3xl font-semibold">{data.title}</h3>}
         {data.subtitle && (
-          <p className="text-[var(--muted-foreground)] mb-6">{data.subtitle}</p>
+          <p className="mb-6 text-[var(--muted-foreground)]">{data.subtitle}</p>
         )}
 
         <div className="relative">
@@ -143,7 +145,7 @@ export function DevicesStrip({
                   className="relative h-64 w-[85vw] max-w-[520px] shrink-0 snap-start overflow-clip rounded-2xl ring-1 ring-[var(--border)] md:w-[520px]"
                 >
                   <BackgroundMedia asset={asset} />
-                  <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-black/20 to-black/20" />
+                  <div className="absolute inset-0 z-10 bg-gradient-to-t from-[var(--background)]/60 via-[var(--background)]/20 to-[var(--background)]/20" />
                   {it.title && (
                     <div className="absolute bottom-3 left-4 z-20 text-sm font-medium">
                       {it.title}
@@ -163,7 +165,14 @@ export function DevicesStrip({
                        hover:bg-[var(--card)]/70 focus:outline-none focus-visible:ring-2"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" className="text-foreground/90">
-              <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path
+                d="M15 6l-6 6 6 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </button>
           <button
@@ -174,7 +183,14 @@ export function DevicesStrip({
                        hover:bg-[var(--card)]/70 focus:outline-none focus-visible:ring-2"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" className="text-foreground/90">
-              <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path
+                d="M9 6l6 6-6 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </button>
         </div>
