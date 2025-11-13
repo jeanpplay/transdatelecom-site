@@ -12,21 +12,32 @@ import { Split } from "@/components/sections/Split"
 import { Features } from "@/components/sections/Features"
 import { Hero } from "@/components/Hero"
 
+// Nuevas secciones
+import { LogosMarquee } from "@/components/sections/LogosMarquee"
+import { DevicesStrip } from "@/components/sections/DevicesStrip"
+import { Stats } from "@/components/sections/Stats"
+import { CTABanner } from "@/components/sections/CTABanner"
+import { MediaMosaic } from "@/components/sections/MediaMosaic"
+
 export const revalidate = 60
 
 export default async function Home() {
   const [home, settings, residencial] = await Promise.all([
     sanityClient.fetch(homeQuery).catch(() => null),
     sanityClient.fetch(siteSettingsQuery).catch(() => null),
-    sanityClient.fetch(plansByCategoryQuery, { category: "residencial" }).catch(() => []),
+    sanityClient
+      .fetch(plansByCategoryQuery, { category: "residencial" })
+      .catch(() => []),
   ])
 
   const top = Array.isArray(residencial) ? residencial.slice(0, 3) : []
 
-  // Si la primera sección es full-bleed, úsala como HERO con imagen
+  // Si la primera sección es full-bleed, úsala como HERO con media
   const first = home?.sections?.[0]
   const heroFromSections = first?._type === "fullBleedSection" ? first : null
-  const restSections = heroFromSections ? home.sections.slice(1) : (home?.sections || [])
+  const restSections = heroFromSections
+    ? home.sections.slice(1)
+    : (home?.sections || [])
 
   return (
     <main className="text-white">
@@ -36,16 +47,16 @@ export default async function Home() {
           data={{
             title: heroFromSections.title,
             subtitle: heroFromSections.subtitle,
-            ctaLabel: (heroFromSections as any).ctaLabel ?? (heroFromSections as any).ctaText,
-            ctaHref: (heroFromSections as any).ctaHref ?? (heroFromSections as any).ctaUrl,
-            align: (heroFromSections as any).align,
-            darken: (heroFromSections as any).darken ?? (heroFromSections as any).darkOverlay,
-            asset:
-              (heroFromSections as any).asset ?? {
-                image: (heroFromSections as any).image,
-                video: (heroFromSections as any).video,
-                poster: (heroFromSections as any).poster,
-              },
+            ctaLabel: heroFromSections.ctaLabel,
+            ctaHref: heroFromSections.ctaHref,
+            align: heroFromSections.align,
+            darken: heroFromSections.darken,
+            // BackgroundMedia acepta {image,video,poster} o string
+            asset: {
+              image: heroFromSections.image,
+              video: heroFromSections.video,
+              poster: heroFromSections.poster,
+            },
           }}
         />
       ) : (
@@ -54,63 +65,123 @@ export default async function Home() {
         </div>
       )}
 
-      {/* Secciones CMS (resto) */}
+      {/* Secciones CMS */}
       {restSections.map((s: any, i: number) => {
-        if (s._type === "fullBleedSection") {
-          return (
-            <FullBleed
-              key={`fb-${i}`}
-              data={{
-                title: s.title,
-                subtitle: s.subtitle,
-                ctaLabel: s.ctaLabel ?? s.ctaText,
-                ctaHref: s.ctaHref ?? s.ctaUrl,
-                align: s.align,
-                darken: s.darken ?? s.darkOverlay,
-                asset: s.asset ?? { image: s.image, video: s.video, poster: s.poster },
-              }}
-            />
-          )
-        }
+        switch (s._type) {
+          case "fullBleedSection":
+            return (
+              <FullBleed
+                key={`fb-${i}`}
+                data={{
+                  title: s.title,
+                  subtitle: s.subtitle,
+                  ctaLabel: s.ctaLabel,
+                  ctaHref: s.ctaHref,
+                  align: s.align,
+                  darken: s.darken,
+                  asset: { image: s.image, video: s.video, poster: s.poster },
+                }}
+              />
+            )
 
-        if (s._type === "splitSection") {
-          return (
-            <Split
-              key={`sp-${i}`}
-              data={{
-                title: s.title,
-                text: s.text ?? s.body,
-                ctaLabel: s.ctaLabel ?? s.ctaText,
-                ctaHref: s.ctaHref ?? s.ctaUrl,
-                imageSide: s.imageSide,
-                darken: s.darken,
-                asset: s.asset ?? { image: s.image, video: s.video, poster: s.poster },
-              }}
-            />
-          )
-        }
+          case "splitSection":
+            return (
+              <Split
+                key={`sp-${i}`}
+                data={{
+                  title: s.title,
+                  text: s.text,
+                  ctaLabel: s.ctaLabel,
+                  ctaHref: s.ctaHref,
+                  imageSide: s.imageSide,
+                  darken: s.darken,
+                  asset: { image: s.image, video: s.video, poster: s.poster },
+                }}
+              />
+            )
 
-        if (s._type === "featuresSection") {
-          return <Features key={`ft-${i}`} data={s} />
-        }
+          case "featuresSection":
+            return <Features key={`ft-${i}`} data={s} />
 
-        return null
+          case "logosMarqueeSection":
+            return (
+              <LogosMarquee
+                key={`lg-${i}`}
+                data={{
+                  title: s.title,
+                  logos: s.logos || [],
+                }}
+              />
+            )
+
+          case "devicesStripSection":
+            return (
+              <DevicesStrip
+                key={`dv-${i}`}
+                data={{
+                  title: s.title,
+                  subtitle: s.subtitle,
+                  items: s.items || [],
+                }}
+              />
+            )
+
+          case "statsSection":
+            return <Stats key={`st-${i}`} data={{ items: s.items || [] }} />
+
+          case "ctaBannerSection":
+            return (
+              <CTABanner
+                key={`cb-${i}`}
+                data={{
+                  title: s.title,
+                  subtitle: s.subtitle,
+                  ctaLabel: s.ctaLabel,
+                  ctaHref: s.ctaHref,
+                }}
+              />
+            )
+
+          case "mediaMosaicSection":
+            return (
+              <MediaMosaic
+                key={`mm-${i}`}
+                data={{
+                  title: s.title,
+                  subtitle: s.subtitle,
+                  darken: s.darken,
+                  items: s.items || [], // alias desde la query
+                }}
+              />
+            )
+
+          default:
+            return null
+        }
       })}
 
-      {/* Beneficios: solo si NO has cargado secciones en Home */}
+      {/* Fallback beneficios si no hay secciones */}
       {!home?.sections?.length && (
         <section className="mx-auto max-w-6xl px-6 py-16">
           <h2 className="text-2xl font-semibold mb-6">¿Por qué elegirnos?</h2>
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-sm text-zinc-300">
-            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">⚡ Baja latencia para Live, VOD y gaming.</li>
-            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">📍 Soporte local y respuesta rápida.</li>
-            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">🔒 Plataforma estable y segura.</li>
-            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">🚀 Despliegue ágil y multipantalla.</li>
+            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">
+              ⚡ Baja latencia para Live, VOD y gaming.
+            </li>
+            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">
+              📍 Soporte local y respuesta rápida.
+            </li>
+            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">
+              🔒 Plataforma estable y segura.
+            </li>
+            <li className="rounded-xl bg-white/5 ring-1 ring-white/10 p-4">
+              🚀 Despliegue ágil y multipantalla.
+            </li>
           </ul>
         </section>
       )}
 
-      {/* Planes destacados: SIEMPRE visibles si hay datos */}
+      {/* Planes destacados */}
       {top.length > 0 && (
         <section className="mx-auto max-w-6xl px-6 pb-16">
           <div className="mb-6 flex items-end justify-between">
@@ -125,7 +196,9 @@ export default async function Home() {
               <li key={p._id} className="card-glass hover-ring p-6">
                 <h3 className="text-xl font-semibold">{p.title}</h3>
                 <p className="mt-1 text-sm text-zinc-400">
-                  {typeof p.price === "number" ? `₡${p.price.toLocaleString("es-CR")}/mes` : "Precio a consultar"}
+                  {typeof p.price === "number"
+                    ? `₡${p.price.toLocaleString("es-CR")}/mes`
+                    : "Precio a consultar"}
                 </p>
                 <p className="mt-2 text-sm">
                   {p.down}↓ / {p.up}↑ Mbps
