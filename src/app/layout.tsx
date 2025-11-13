@@ -38,16 +38,16 @@ export default async function RootLayout({
 
   return (
     <html lang="es">
-      {/* body en negro, contenido por encima del backdrop */}
       <body className="relative min-h-screen overflow-x-hidden bg-[#0B0D0E] text-white antialiased">
-        {/* Fondo sutil tipo Starlink (puedes alternar variant="grid") */}
+        {/* Fondo sutil tipo Starlink */}
         <SiteBackdrop variant="topo" opacity={0.16} />
 
         <div className="relative z-10">
-          <SiteHeader brand={brand} />
+          <SiteHeader brand={brand} logoSrc="/logo-spott.png" />
           {children}
           <SiteFooter
             brand={brand}
+            logoSrc="/logo-spott.png"
             phone={settings?.phone}
             whatsapp={settings?.whatsapp}
             address={settings?.address}
