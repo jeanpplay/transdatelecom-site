@@ -14,7 +14,7 @@ export function PageHero({
   ctaLabel,
   ctaHref = "/contacto",
   asset,
-  darken = 0.45, // oscurecido sutil controlable
+  darken = 0.32, // un poco más claro
   center = "center", // "center" | "left"
 }: {
   title: string;
@@ -31,47 +31,38 @@ export function PageHero({
     <section className="relative overflow-hidden border-b border-[var(--border)]">
       {/* Fondo full-bleed */}
       {asset && (
-        <div className="absolute inset-0 -z-10">
+        <div
+          className="
+            absolute inset-0 z-0
+            [&>img]:absolute [&>img]:inset-0 [&>img]:h-full [&>img]:w-full [&>img]:object-cover
+            [&>video]:absolute [&>video]:inset-0 [&>video]:h-full [&>video]:w-full [&>video]:object-cover
+          "
+        >
           <BackgroundMedia asset={media} />
         </div>
       )}
 
-      {/* Veil: baja ligeramente la intensidad de la imagen */}
+      {/* Overlay principal (ligeramente más claro) */}
       <div
-        className="absolute inset-0 -z-10"
+        className="absolute inset-0 z-[1] pointer-events-none"
         style={{
-          background: `rgb(0 0 0 / ${Math.min(Math.max(darken * 0.5, 0), 0.6)})`,
+          background: `linear-gradient(180deg,
+            rgba(5,10,18,${Math.min(darken + 0.10, 0.85)}) 0%,
+            rgba(5,10,18,${darken}) 45%,
+            rgba(5,10,18,${darken}) 100%)`,
         }}
       />
 
-      {/* Overlay principal en tonos del tema (var(--background)) */}
-      <div
-        className="absolute inset-0 -z-10"
-        style={{
-          background: `
-            linear-gradient(
-              180deg,
-              color-mix(in oklab, var(--background) 82%, black 18%) 0%,
-              color-mix(in oklab, var(--background) 90%, black 10%) 48%,
-              color-mix(in oklab, var(--background) 96%, black 4%) 100%
-            )
-          `,
-        }}
-      />
+      {/* Glow morado sutil */}
+      <div className="absolute inset-0 z-[1] pointer-events-none bg-[radial-gradient(60%_28%_at_50%_0%,rgba(124,58,237,.18),transparent_60%)]" />
 
-      {/* Glow superior morado sutil */}
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_30%_at_50%_0%,rgba(124,58,237,.22),transparent_60%)]" />
-
-      {/* Fades laterales para dar profundidad */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 -z-10 w-24 bg-gradient-to-r from-[var(--background)]/50 to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-24 bg-gradient-to-l from-[var(--background)]/50 to-transparent" />
-
-      {/* Contenido */}
-      <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
-        <div className={center === "center" ? "mx-auto max-w-3xl text-center" : "max-w-2xl"}>
+      <div className="relative z-10 mx-auto max-w-6xl px-6 py-24 md:py-28">
+        <div className={center === "center" ? "text-center" : "max-w-2xl"}>
           <h1 className="text-4xl font-semibold md:text-5xl">{title}</h1>
           {subtitle && (
-            <p className="mt-3 text-lg text-[var(--muted-foreground)]">{subtitle}</p>
+            <p className="mt-3 text-lg text-[var(--muted-foreground)]">
+              {subtitle}
+            </p>
           )}
           {ctaLabel && (
             <div className={center === "center" ? "mt-8 flex justify-center" : "mt-8"}>
