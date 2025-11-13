@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { sanityClient } from "@/lib/sanity.client";
 import { siteSettingsQuery } from "@/lib/sanity.queries";
+import SiteBackdrop from "@/components/SiteBackdrop"; // fondo sutil global
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://transdatelecom-site.vercel.app"), // actualízalo luego
@@ -27,21 +28,31 @@ export const metadata: Metadata = {
   themeColor: "#0B0D0E",
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const settings = await sanityClient.fetch(siteSettingsQuery).catch(() => null);
   const brand = settings?.brand || "Spott";
 
   return (
     <html lang="es">
-      <body className="bg-[#0B0D0E] text-white antialiased">
-        <SiteHeader brand={brand} />
-        {children}
-        <SiteFooter
-          brand={brand}
-          phone={settings?.phone}
-          whatsapp={settings?.whatsapp}
-          address={settings?.address}
-        />
+      {/* body en negro, contenido por encima del backdrop */}
+      <body className="relative min-h-screen overflow-x-hidden bg-[#0B0D0E] text-white antialiased">
+        {/* Fondo sutil tipo Starlink (puedes alternar variant="grid") */}
+        <SiteBackdrop variant="topo" opacity={0.16} />
+
+        <div className="relative z-10">
+          <SiteHeader brand={brand} />
+          {children}
+          <SiteFooter
+            brand={brand}
+            phone={settings?.phone}
+            whatsapp={settings?.whatsapp}
+            address={settings?.address}
+          />
+        </div>
       </body>
     </html>
   );
