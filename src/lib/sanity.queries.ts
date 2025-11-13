@@ -16,33 +16,39 @@ export const allFaqsQuery = groq`
 }
 `
 
-// HOME con secciones (forzamos tamaños y formato)
+// HOME con secciones — coalesce de rutas para que no falte ninguna imagen
 export const homeQuery = groq`
 *[_type=="home"][0]{
   sections[]{
     _type,
 
-    // Full-bleed (fondo grande)
+    // FULL-BLEED
     _type == "fullBleedSection" => {
       _type, label, title, subtitle,
       "ctaLabel": coalesce(ctaLabel, ctaText),
       "ctaHref":  coalesce(ctaHref,  ctaUrl),
       align,
-      "darken": coalesce(darken, darkOverlay),
+      "darken":  coalesce(darken, darkOverlay),
 
-      // Pedimos variantes ligeras a Sanity
+      // Preferimos image > media > asset > url
       "image": select(
-        defined(media.asset->url) => media.asset->url + "?auto=format&w=1920",
-        defined(image.asset->url) => image.asset->url + "?auto=format&w=1920"
+        defined(image.asset->url) => image.asset->url + "?auto=format&fit=max&w=1920&q=75",
+        defined(media.asset->url)  => media.asset->url  + "?auto=format&fit=max&w=1920&q=75",
+        defined(asset->url)        => asset->url        + "?auto=format&fit=max&w=1920&q=75",
+        defined(url)               => url               + "?auto=format&fit=max&w=1920&q=75"
       ),
-      "video":  coalesce(video.asset->url, file.asset->url),
-      "poster": coalesce(
-        poster.asset->url, 
-        posterImage.asset->url
-      ) + "?auto=format&w=1920"
+      "video":  coalesce(video.asset->url, file.asset->url, videoUrl),
+      "poster": select(
+        defined(poster.asset->url)      => poster.asset->url      + "?auto=format&fit=max&w=1920&q=75",
+        defined(posterImage.asset->url) => posterImage.asset->url + "?auto=format&fit=max&w=1920&q=75",
+        defined(image.asset->url)       => image.asset->url       + "?auto=format&fit=max&w=1920&q=75",
+        defined(media.asset->url)       => media.asset->url       + "?auto=format&fit=max&w=1920&q=75",
+        defined(asset->url)             => asset->url             + "?auto=format&fit=max&w=1920&q=75",
+        defined(url)                    => url                    + "?auto=format&fit=max&w=1920&q=75"
+      )
     },
 
-    // 50/50 (imagen mediana)
+    // SPLIT 50/50
     _type == "splitSection" => {
       _type, title,
       "text":     coalesce(text, body),
@@ -50,56 +56,81 @@ export const homeQuery = groq`
       "ctaHref":  coalesce(ctaHref,  ctaUrl),
       imageSide,
       "darken": darken,
+
       "image": select(
-        defined(media.asset->url) => media.asset->url + "?auto=format&w=1600",
-        defined(image.asset->url) => image.asset->url + "?auto=format&w=1600"
+        defined(image.asset->url) => image.asset->url + "?auto=format&fit=max&w=1600&q=75",
+        defined(media.asset->url)  => media.asset->url + "?auto=format&fit=max&w=1600&q=75",
+        defined(asset->url)        => asset->url       + "?auto=format&fit=max&w=1600&q=75",
+        defined(url)               => url              + "?auto=format&fit=max&w=1600&q=75"
       ),
-      "video":  video.asset->url,
-      "poster": poster.asset->url + "?auto=format&w=1600"
+      "video":  coalesce(video.asset->url, file.asset->url, videoUrl),
+      "poster": select(
+        defined(poster.asset->url) => poster.asset->url + "?auto=format&fit=max&w=1600&q=75",
+        defined(image.asset->url)  => image.asset->url  + "?auto=format&fit=max&w=1600&q=75",
+        defined(media.asset->url)  => media.asset->url  + "?auto=format&fit=max&w=1600&q=75",
+        defined(asset->url)        => asset->url        + "?auto=format&fit=max&w=1600&q=75",
+        defined(url)               => url               + "?auto=format&fit=max&w=1600&q=75"
+      )
     },
 
-    // Features (solo texto/emoji)
+    // FEATURES
     _type == "featuresSection" => {
-      _type, title,
-      items[]{ icon, title, body }
+      _type, title, items[]{ icon, title, body }
     },
 
-    // Logos (pequeños)
+    // LOGOS MARQUEE
     _type == "logosMarqueeSection" => {
       _type, title,
-      "logos": logos[]{ 
-        "src": asset->url + "?auto=format&w=320&fm=png",
+      "logos": logos[]{
+        "src": select(
+          defined(image.asset->url) => image.asset->url + "?auto=format&fit=max&w=320&q=80",
+          defined(asset->url)       => asset->url       + "?auto=format&fit=max&w=320&q=80",
+          defined(url)              => url              + "?auto=format&fit=max&w=320&q=80"
+        ),
         alt
       }
     },
 
-    // Galería de dispositivos (cards)
+    // DEVICES STRIP
     _type == "devicesStripSection" => {
       _type, title, subtitle,
-      "items": items[] {
+      "items": items[]{
         title,
-        "image":  media.asset->url + "?auto=format&w=1000",
-        "poster": poster.asset->url + "?auto=format&w=1000"
+        "image": select(
+          defined(image.asset->url) => image.asset->url + "?auto=format&fit=max&w=1000&q=80",
+          defined(media.asset->url) => media.asset->url + "?auto=format&fit=max&w=1000&q=80",
+          defined(asset->url)       => asset->url       + "?auto=format&fit=max&w=1000&q=80",
+          defined(url)              => url              + "?auto=format&fit=max&w=1000&q=80"
+        ),
+        "poster": select(
+          defined(poster.asset->url) => poster.asset->url + "?auto=format&fit=max&w=1000&q=80",
+          defined(image.asset->url)  => image.asset->url  + "?auto=format&fit=max&w=1000&q=80",
+          defined(asset->url)        => asset->url        + "?auto=format&fit=max&w=1000&q=80",
+          defined(url)               => url               + "?auto=format&fit=max&w=1000&q=80"
+        )
       }
     },
 
-    // KPIs / Stats
-    _type == "statsSection" => {
-      _type,
-      "items": items[]{ label, value }
-    },
+    // STATS
+    _type == "statsSection" => { _type, "items": items[]{ label, value } },
 
-    // Banda CTA
+    // CTA BANNER
     _type == "ctaBannerSection" => {
       _type, title, subtitle,
       "ctaLabel": ctaLabel,
       "ctaHref":  ctaUrl
     },
 
-    // Mosaico de medios (grid)
+    // MEDIA MOSAIC
     _type == "mediaMosaicSection" => {
       _type, title, subtitle, darken,
-      "items": items[]{ "image": asset->url + "?auto=format&w=1400" }
+      "items": items[]{
+        "image": select(
+          defined(image.asset->url) => image.asset->url + "?auto=format&fit=max&w=1400&q=75",
+          defined(asset->url)       => asset->url       + "?auto=format&fit=max&w=1400&q=75",
+          defined(url)              => url              + "?auto=format&fit=max&w=1400&q=75"
+        )
+      }
     }
   }
 }
