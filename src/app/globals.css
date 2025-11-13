@@ -61,23 +61,26 @@
 
 /* =========================
    PALETA SPOTT (oscura)
-   Fondo: #0b0e12 | Acento: violeta #8b5cf6
    ========================= */
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.16 0.03 260);
+  /* Base azul muy oscuro + texto blanco suave */
+  --background: oklch(0.16 0.03 260);      /* #0b0e12 aprox */
   --foreground: oklch(0.98 0.003 248);
 
+  /* Superficies */
   --card: oklch(0.16 0.03 260);
   --card-foreground: var(--foreground);
 
   --popover: oklch(0.16 0.03 260);
   --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.68 0.20 300);
+  /* Brand morado */
+  --primary: oklch(0.68 0.20 300);          /* ~#7C3AED */
   --primary-foreground: oklch(0.99 0.002 250);
 
+  /* Apoyos */
   --secondary: oklch(0.20 0.03 265);
   --secondary-foreground: var(--foreground);
 
@@ -89,16 +92,19 @@
 
   --destructive: oklch(0.55 0.20 25);
 
+  /* Bordes / inputs / focus */
   --border: oklch(0.28 0.03 260);
   --input: var(--border);
   --ring: var(--primary);
 
+  /* Charts */
   --chart-1: oklch(0.65 0.20 40);
   --chart-2: oklch(0.57 0.12 185);
   --chart-3: oklch(0.42 0.08 230);
   --chart-4: oklch(0.85 0.20 85);
   --chart-5: oklch(0.78 0.18 70);
 
+  /* Sidebar (si aplica) */
   --sidebar: oklch(0.17 0.03 260);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
@@ -139,16 +145,43 @@
 }
 
 /* ===== Helpers visuales ===== */
+
+/* Glow sutil estilo Starlink pero con morados/azules */
 .bg-hero{
   background:
     radial-gradient(60% 40% at 50% 18%, rgba(139,92,246,.25), transparent 60%),
     radial-gradient(40% 30% at 12% 10%, rgba(139,92,246,.14), transparent 60%),
-    radial-gradient(40% 30% at 88% 12%, rgba(167,139,250,.12), transparent 60%);
+    radial-gradient(40% 30% at 88% 12%, rgba(167,139,250,.12), transparent 60%),
+    var(--background);
 }
-.btn-acc{ background: var(--primary); color: var(--primary-foreground); }
-.btn-acc:hover{ filter: brightness(1.05); }
-.card-glass{ @apply bg-white/5 ring-1 ring-white/10 rounded-2xl; }
-.hover-ring{ @apply ring-1 ring-transparent hover:ring-white/20 transition; }
+
+/* Botón principal con degradé y micro-interacción */
+.btn-acc{
+  @apply rounded-xl px-4 py-2 font-semibold shadow-sm;
+  background: linear-gradient(135deg, oklch(0.68 0.20 300), oklch(0.74 0.16 300));
+  color: var(--primary-foreground);
+  border: 1px solid color-mix(in oklab, var(--primary) 35%, transparent);
+  transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+}
+.btn-acc:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+.btn-acc:active{ transform: translateY(0); }
+.btn-acc:focus-visible{ outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 35%, transparent); }
+
+/* Tarjetas tipo “glass” sobre superficies */
+.card-glass{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)),
+    var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+}
+.hover-ring{
+  transition: box-shadow .2s ease, border-color .2s ease;
+}
+.hover-ring:hover{
+  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+  border-color: color-mix(in oklab, var(--primary) 45%, transparent);
+}
 
 /* (opcional) glow extra para secciones */
 .bg-glow::before{

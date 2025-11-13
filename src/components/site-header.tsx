@@ -30,7 +30,13 @@ export function SiteHeader({
     : "/contacto";
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/60 backdrop-blur supports-[backdrop-filter]:bg-black/40">
+    <header
+      className="
+        sticky top-0 z-40 w-full border-b backdrop-blur
+        bg-[var(--card)]/70 supports-[backdrop-filter]:bg-[var(--card)]/50
+        border-[var(--border)]
+      "
+    >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         {/* Brand: logo + texto */}
         <Link href="/" className="flex items-center gap-3" aria-label={brand}>
@@ -46,7 +52,7 @@ export function SiteHeader({
         </Link>
 
         {/* Nav */}
-        <nav className="hidden gap-6 text-sm text-zinc-300 md:flex">
+        <nav className="hidden gap-6 text-sm text-[var(--muted-foreground)] md:flex">
           {NAV.map((item) => {
             const active =
               item.href === "/" ? pathname === "/" : pathname?.startsWith(item.href);
@@ -54,7 +60,7 @@ export function SiteHeader({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`transition hover:text-white ${
+                className={`transition hover:text-[var(--primary)] ${
                   active ? "text-white underline underline-offset-4" : ""
                 }`}
               >

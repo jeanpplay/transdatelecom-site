@@ -38,8 +38,9 @@ export default async function RootLayout({
 
   return (
     <html lang="es">
-      <body className="relative min-h-screen overflow-x-hidden bg-[#0B0D0E] text-white antialiased">
-        {/* Fondo sutil tipo Starlink */}
+      {/* Usa tokens del tema (no hex directo) */}
+      <body className="relative min-h-screen overflow-x-hidden bg-background text-foreground antialiased">
+        {/* Fondo sutil (topo o grid) */}
         <SiteBackdrop variant="topo" opacity={0.16} />
 
         <div className="relative z-10">
