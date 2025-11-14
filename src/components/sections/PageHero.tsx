@@ -38,7 +38,7 @@ export function PageHero({
             [&>video]:absolute [&>video]:inset-0 [&>video]:h-full [&>video]:w-full [&>video]:object-cover
           "
         >
-          <BackgroundMedia asset={media} />
+          <BackgroundMedia asset={media} priority />
         </div>
       )}
 

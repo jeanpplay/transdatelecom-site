@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
       // Sanity CDN (imágenes y archivos)
       { protocol: "https", hostname: "cdn.sanity.io", pathname: "/images/**" },
       { protocol: "https", hostname: "cdn.sanity.io", pathname: "/files/**" },
-      // si usas alguna imagen externa extra
+      // Si usas alguna imagen externa extra (Unsplash)
       { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
     ],
     dangerouslyAllowSVG: true,

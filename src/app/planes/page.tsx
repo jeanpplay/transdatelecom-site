@@ -88,7 +88,7 @@ export default async function Page() {
       </section>
 
       <section className="relative overflow-hidden border-t border-[var(--border)]">
-        {/* Fondo con imagen suave (opcional) */}
+        {/* Fondo con imagen suave */}
         <div className="absolute inset-0 -z-10 bg-[url('/bg/planes-bg.jpg')] bg-cover bg-center" />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(5,10,18,.65),rgba(5,10,18,.85))]" />
 
