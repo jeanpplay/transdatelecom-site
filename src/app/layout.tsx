@@ -1,30 +1,63 @@
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { sanityClient } from "@/lib/sanity.client";
 import { siteSettingsQuery } from "@/lib/sanity.queries";
-import SiteBackdrop from "@/components/SiteBackdrop"; // fondo sutil global
+import SiteBackdrop from "@/components/SiteBackdrop";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://transdatelecom-site.vercel.app"), // actualízalo luego
-  title: "Spott — Plataforma OTT de Nueva Generación",
+  metadataBase: new URL("https://www.spot-tv.com"),
+
+  title: {
+    default: "Spott — Plataforma OTT de Nueva Generación",
+    template: "%s | Spott",
+  },
+
   description:
-    "Lanza y monetiza tu servicio de streaming con calidad operadora: Live, VOD, FAST, apps multiplataforma y analítica en tiempo real.",
+    "Plataforma OTT para servicios de streaming con TV en vivo, contenido multiplataforma y tecnología para operadores.",
+
+  alternates: {
+    canonical: "/",
+  },
+
   openGraph: {
     title: "Spott — Plataforma OTT de Nueva Generación",
     description:
-      "OTT, Live, FAST, monetización, apps nativas y analítica. Todo en una sola plataforma.",
-    images: ["/og.jpg"],
+      "Plataforma OTT con TV en vivo, contenido multiplataforma y tecnología para operadores.",
+    url: "https://www.spot-tv.com",
+    siteName: "Spott",
+    images: [
+      {
+        url: "/og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Spott — Plataforma OTT",
+      },
+    ],
+    locale: "es_CR",
     type: "website",
   },
+
   twitter: {
     card: "summary_large_image",
     title: "Spott — Plataforma OTT",
     description:
-      "OTT, Live, FAST, monetización, apps nativas y analítica. Todo en una sola plataforma.",
+      "Plataforma OTT con TV en vivo, contenido multiplataforma y tecnología para operadores.",
     images: ["/og.jpg"],
   },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+};
+
+export const viewport: Viewport = {
   themeColor: "#0B0D0E",
 };
 
@@ -38,14 +71,14 @@ export default async function RootLayout({
 
   return (
     <html lang="es">
-      {/* Usa tokens del tema */}
       <body className="relative min-h-screen overflow-x-hidden bg-background text-foreground antialiased">
-        {/* Fondo sutil (topo o grid) */}
         <SiteBackdrop variant="topo" opacity={0.16} />
 
         <div className="relative z-10">
           <SiteHeader brand={brand} logoSrc="/logo-spott.png" />
+
           {children}
+
           <SiteFooter
             brand={brand}
             logoSrc="/logo-spott.png"
